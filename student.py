@@ -31,8 +31,8 @@ class Student:
     cellphone_number: str | None = None
     ase: ASE | None = None
     number_family_members: int | None = None
-    foreign_language_I: str = "Inglês"
-    foreign_language_II: str | None = None
+    foreign_language_i: str = "Inglês"
+    foreign_language_ii: str | None = None
     computer_at_home: bool = False
     internet_at_home: bool = False
     cc: str | None = None
