@@ -1,0 +1,117 @@
+target-version = "py314"
+line-length = 120
+indent-width = 4
+
+extend-exclude = [
+    ".venv",
+    "venv",
+    "build",
+    "dist",
+    "*.egg-info",
+    "__pycache__",
+]
+
+[lint]
+# A deliberately strict, broad rule set.
+select = [
+    "A",      # flake8-builtins
+    "ANN",    # annotations
+    "ARG",    # unused function arguments
+    "ASYNC",  # async correctness
+    "B",      # flake8-bugbear
+    "C4",     # comprehensions
+    "COM",    # trailing commas
+    "DTZ",    # timezone-aware datetime usage
+    "E4",
+    "E7",
+    "E9",     # pycodestyle errors
+    "ERA",    # commented-out code
+    "F",      # pyflakes
+    "FA",     # future annotations
+    "FAST",    # FastAPI
+    "FBT",    # boolean trap
+    "FLY",    # f-string rules
+    "FURB",   # refurb
+    "I",      # import sorting
+    "ICN",    # import conventions
+    "INP",    # implicit namespace packages
+    "ISC",    # implicit string concatenation
+    "LOG",    # logging
+    "N",      # pep8-naming
+    "NPY",    # NumPy-specific rules
+    "PGH",    # pygrep-hooks
+    "PIE",    # flake8-pie
+    "PL",     # pylint
+    "PT",     # pytest-style
+    "PTH",    # pathlib
+    "PYI",    # type stub files
+    "RET",    # return statements
+    "RSE",    # raise statements
+    "RUF",    # Ruff-specific rules
+    "S",      # flake8-bandit security rules
+    "SIM",    # simplification
+    "SLF",    # private member access
+    "SLOT",   # __slots__
+    "T10",    # debugger calls
+    "T20",    # print statements
+    "TC",     # type-checking imports
+    "TD",     # TODO comments
+    "TRY",    # exception handling
+    "UP",     # pyupgrade
+    "W",      # pycodestyle warnings
+]
+
+# E501 is handled more appropriately by the formatter.
+ignore = [
+    "E501",
+]
+
+# Ruff can automatically fix most issues, but never silently alter these.
+unfixable = [
+    "F401",  # unused imports may have side effects
+    "F841",  # unused variables may indicate a mistake
+]
+
+[lint.per-file-ignores]
+# Tests commonly use assertions, fixtures, and less strict typing.
+"tests/**/*.py" = [
+    "ANN",
+    "D",
+    "PLR2004",
+    "S101",
+    "SLF001",
+]
+
+# Scripts and command-line programs often intentionally use print().
+"scripts/**/*.py" = [
+    "T201",
+]
+
+# Package initializers commonly re-export names.
+"__init__.py" = [
+    "F401",
+    "F403",
+]
+
+[lint.mccabe]
+max-complexity = 10
+
+[lint.pylint]
+max-args = 6
+max-branches = 12
+max-returns = 6
+max-statements = 50
+
+[lint.isort]
+force-single-line = true
+combine-as-imports = true
+force-wrap-aliases = true
+split-on-trailing-comma = true
+
+[format]
+quote-style = "double"
+indent-style = "space"
+line-ending = "auto"
+skip-magic-trailing-comma = false
+docstring-code-format = true
+
