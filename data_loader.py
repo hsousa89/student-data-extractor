@@ -95,7 +95,10 @@ def student_data_to_csv(data_folder: Path, output_path: Path, **kwargs: dict[str
         output_path.joinpath("student_data.csv")
     df = student_data_to_dataframe(data_folder)
     if kwargs.get("sort"):
-        sort_columns = kwargs.get("sort")
+        sort_columns = kwargs["sort"]
         df = df.sort(sort_columns)
+    if kwargs.get("select"):
+        select_columns = kwargs["select"]
+        df.select(select_columns)
     logger.info(f"Writing {df.shape[0]} rows across {df.shape[1]} columns to file: {output_path.name}")
     df.write_csv(output_path)
