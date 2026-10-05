@@ -1,6 +1,11 @@
 from dataclasses import dataclass
-from datetime import date
 from enum import StrEnum
+from typing import TYPE_CHECKING
+
+from utils import calculate_age
+
+if TYPE_CHECKING:
+    from datetime import date
 
 
 class Gender(StrEnum):
@@ -68,3 +73,6 @@ class Student:
     guardian_school: str | None = None
     guardian_job: str | None = None
     guardian_job_situation: str | None = None
+
+    def __post_init__(self) -> None:
+        self.age = calculate_age(self.bdate)
