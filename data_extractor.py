@@ -98,16 +98,16 @@ class StudentFileExtractor(DataExtractor):
                     logger.warning(f"Row: {row} is not within file's range! Using row: {row - 2} instead.")
                     value = raw_data[row - 2][column]
             if key.startswith("guardian") and not value and (row + 1 < max_row):
-                logger.warning(f"No {key} foound on {cell}! Using row: {row + 1} instead.")
+                logger.warning(f"No {key} found on {cell}! Using row: {row + 1} instead.")
                 value = raw_data[row + 1][column]
             if key.startswith("guardian") and not value and (row + 2 < max_row):
-                logger.warning(f"No {key} foound on {cell}! Using row: {row + 2} instead.")
+                logger.warning(f"No {key} found on {cell}! Using row: {row + 2} instead.")
                 value = raw_data[row + 2][column]
             if key.startswith("guardian") and not value:
-                logger.warning(f"No {key} foound on {cell}! Using row: {row - 1} instead.")
+                logger.warning(f"No {key} found on {cell}! Using row: {row - 1} instead.")
                 value = raw_data[row - 1][column]
             if key.startswith("guardian") and not value:
-                logger.warning(f"No {key} foound on {cell}! Using row: {row - 2} instead.")
+                logger.warning(f"No {key} found on {cell}! Using row: {row - 2} instead.")
                 value = raw_data[row - 2][column]
             if not value and key in not_null_keys:
                 raise MissingValueError(key, cell, self.file_path)
