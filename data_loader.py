@@ -11,6 +11,7 @@ from data_ranges import eb030a_data_ranges
 from data_ranges import eb058f_data_ranges
 from data_ranges import p072_data_ranges
 from data_ranges import s07a_data_ranges
+from utils import extract_data_from_file_path_name
 
 if TYPE_CHECKING:
     from datetime import date
@@ -61,7 +62,7 @@ def _get_file_paths(directory: Path) -> list[Path]:
 
 def _define_extractor(file_path: Path) -> DataExtractor:
     file_name = file_path.name
-    if re.match(r"p(:?ag_)?\d{1,2}.xls(?:x)?", file_name):
+    if re.match(r"p(?:ag_)?\d{1,2}.xls(?:x)?", file_name):
         ranges = _define_data_ranges(file_name)
         return StudentFileExtractor(
             file_path=file_path,
@@ -78,9 +79,13 @@ def load_student_data(file_path: Path) -> dict[str, int | float | str | bool | d
 def aggregate_student_data(data_folder: Path) -> dict[str, list[int | float | str | bool | date | datetime]]:
     paths = _get_file_paths(data_folder)
     keys = _define_data_ranges(paths[0].name).keys()
-    aggregated_data = {key: [] for key in keys}
+    aggregated_data = {"level": [], "group": []}
+    aggregated_data.update({key: [] for key in keys})
     for path in paths:
+        level, group, _ = extract_data_from_file_path_name("/".join(path.parts))
         data = load_student_data(path)
+        aggregated_data["level"].append(level)
+        aggregated_data["group"].append(group)
         for key in keys:
             aggregated_data[key].append(data.get(key))
     return aggregated_data
@@ -94,11 +99,16 @@ def student_data_to_csv(data_folder: Path, output_path: Path, **kwargs: dict[str
     if not output_path.name.endswith(".csv"):
         output_path.joinpath("student_data.csv")
     df = student_data_to_dataframe(data_folder)
+    if kwargs.get("cast"):
+        logger.info(f"Casting columns {kwargs['cast'].keys()} to {kwargs['cast'].values()}")
+        df = df.with_columns([pl.col(k).cast(v) for k, v in kwargs["cast"].items()])
     if kwargs.get("sort"):
         sort_columns = kwargs["sort"]
+        logger.info(f"Sorting by: {sort_columns}")
         df = df.sort(sort_columns)
     if kwargs.get("select"):
         select_columns = kwargs["select"]
-        df.select(select_columns)
+        logger.info(f"Selecting columns: {select_columns}")
+        df = df.select(select_columns)
     logger.info(f"Writing {df.shape[0]} rows across {df.shape[1]} columns to file: {output_path.name}")
     df.write_csv(output_path)
